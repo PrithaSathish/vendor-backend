@@ -14,10 +14,15 @@ connectDB();
 const app = express();
 app.use(express.json());
 
+
 app.use(cors({
-  origin: "http://localhost:5173",   // frontend URL
+  origin: [
+    "http://localhost:5173",                // for local testing
+    "https://vendor-crackers.netlify.app"   // your deployed frontend
+  ],
   credentials: true
 }));
+
 
 // Seed default admin
 seedAdmin();
