@@ -8,6 +8,14 @@ import seedAdmin from "./utils/seedAdmin.js";
 import cors from "cors";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "client/build")));
+app.get("*",(req, res) =>{
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+
+});
+
 dotenv.config();
 connectDB();
 
@@ -15,7 +23,13 @@ const app = express();
 app.use(express.json());
 
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",                // for local testing
+    "https://vendor-crackers.netlify.app",   // your deployed frontend
+  ],
+  credentials: true
+}));
 
 
 // Seed default admin
