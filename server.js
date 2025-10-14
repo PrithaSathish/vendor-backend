@@ -15,11 +15,10 @@ connectDB();
 
 const app = express();
 
-// ✅ Fix for __dirname and __filename in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Middleware
+//  Middleware
 app.use(express.json());
 app.use(
   cors({
@@ -31,33 +30,33 @@ app.use(
   })
 );
 
-// ✅ Seed default admin (optional: wrap in try/catch)
+
 seedAdmin();
 
-// ✅ API Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/crackers", crackerRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-// ✅ Test route
+
 app.get("/api/test", (req, res) => {
-  res.send("✅ API is working fine!");
+  res.send(" API is working fine!");
 });
 
 
 
-// ✅ 404 handler (keep this after frontend handler)
+
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// ✅ Global error handler
+// Global error handler
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
   res.status(500).json({ message: "Server Error", error: err.message });
 });
 
-// ✅ Start server
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
