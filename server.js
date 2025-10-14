@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import crackerRoutes from "./routes/crackerRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import seedAdmin from "./utils/seedAdmin.js";
+import cors from "cors";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 dotenv.config();
@@ -13,7 +14,7 @@ connectDB();
 const app = express();
 app.use(express.json());
 
-const cors = require ("cors")
+
 app.use(cors());
 
 
