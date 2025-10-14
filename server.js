@@ -45,12 +45,7 @@ app.get("/api/test", (req, res) => {
   res.send("✅ API is working fine!");
 });
 
-// ✅ Serve frontend (React build)
-app.use(express.static(path.join(__dirname, "client/build")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
-});
 
 // ✅ 404 handler (keep this after frontend handler)
 app.use((req, res) => {
