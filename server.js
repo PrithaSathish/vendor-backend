@@ -7,55 +7,62 @@ import orderRoutes from "./routes/orderRoutes.js";
 import seedAdmin from "./utils/seedAdmin.js";
 import cors from "cors";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
-
-const path = require("path");
-
-app.use(express.static(path.join(__dirname, "client/build")));
-app.get("*",(req, res) =>{
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
-
-});
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 connectDB();
 
 const app = express();
+
+// ✅ Fix for __dirname and __filename in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ✅ Middleware
 app.use(express.json());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // local
+      "https://vendor-crackers.netlify.app", // deployed frontend
+    ],
+    credentials: true,
+  })
+);
 
-
-app.use(cors({
-  origin: [
-    "http://localhost:5173",                // for local testing
-    "https://vendor-crackers.netlify.app",   // your deployed frontend
-  ],
-  credentials: true
-}));
-
-
-// Seed default admin
+// ✅ Seed default admin (optional: wrap in try/catch)
 seedAdmin();
 
-// Routes
+// ✅ API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/crackers", crackerRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
-// Test route
+// ✅ Test route
 app.get("/api/test", (req, res) => {
   res.send("✅ API is working fine!");
 });
 
-// 404 handler
+// ✅ Serve frontend (React build)
+app.use(express.static(path.join(__dirname, "client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+});
+
+// ✅ 404 handler (keep this after frontend handler)
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// Global error handler
+// ✅ Global error handler
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
   res.status(500).json({ message: "Server Error", error: err.message });
 });
 
-app.use("/api/dashboard", dashboardRoutes);
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
