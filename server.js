@@ -23,7 +23,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // local
+      "http://localhost:5173", 
+        "http://localhost:5174",
       "https://vendor-crackers.netlify.app", // deployed frontend
     ],
     credentials: true,
